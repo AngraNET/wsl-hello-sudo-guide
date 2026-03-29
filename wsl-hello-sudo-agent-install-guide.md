@@ -122,7 +122,33 @@ If anything suspicious is found, **stop and report to the user before proceeding
 
 ---
 
-## Step 4 — Install Linux build dependencies
+## Step 4 — Prepare a sudo lockout recovery path
+
+**Do this before touching PAM.** If the PAM config ends up broken, you need a way back in that survives a WSL restart — a live root terminal in the same session is not enough.
+
+### 4a — Set a root password
+
+```bash
+sudo passwd root
+```
+
+Choose a strong password and store it somewhere safe. This gives you a guaranteed fallback that does not depend on PAM or Windows Hello.
+
+### 4b — Confirm `wsl -u root` works
+
+From a **Windows Terminal** (not inside WSL), verify you can enter WSL as root:
+
+```
+wsl -u root
+```
+
+This bypasses PAM entirely and works regardless of how broken `/etc/pam.d/sudo` is. If you can get in here, you can always fix the config.
+
+> Ask the user to open Windows Terminal now, run `wsl -u root`, confirm they get a root shell, then type `exit` to return. Do not proceed to the installer until this is confirmed.
+
+---
+
+## Step 5 — Install Linux build dependencies
 
 ```bash
 sudo apt update && sudo apt install -y gcc make libpam0g-dev git libssl-dev pkg-config
@@ -281,7 +307,7 @@ The installer will ask to overwrite existing files — answer `y` to all.
 | `cargo: command not found` after WSL restart | Run `source ~/.cargo/env` |
 | `.exe` not found at expected path after build | Check `target/x86_64-pc-windows-gnu/release/` — binary is `WindowsHelloBridge.exe` (not `win_hello_bridge.exe`) |
 | Windows Hello prompt doesn't appear | Check Windows interop is enabled: `[interop] enabled=true` in `/etc/wsl.conf` |
-| Locked out of sudo | Boot with `wsl --distribution <name> --user root` from Windows Terminal and fix PAM config |
+| Locked out of sudo | From Windows Terminal run `wsl -u root` — this bypasses PAM entirely. Then restore `/etc/pam.d/sudo` or run `sudo pam-auth-update --remove wsl-hello`. If you set a root password in Step 4, you can also use it here. A root shell kept open in the same session is **not** sufficient — it disappears on WSL restart. |
 
 ---
 
