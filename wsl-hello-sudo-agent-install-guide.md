@@ -1,7 +1,6 @@
 # WSL Hello Sudo — Agent-Driven Installation Guide
 
-This document guides an AI coding agent through installing `wsl-hello-sudo` from source on a new WSL instance.
-The user will ask their agent to read this and walk them through it step by step.
+This document is for **you**, the AI coding agent. Your job is to install `wsl-hello-sudo` from source on WSL2, guiding the user through it step by step. Run all commands yourself. Only hand over to the user when a step requires interactive input.
 
 Source: https://github.com/lzlrd/wsl-hello-sudo
 
@@ -9,7 +8,7 @@ Source: https://github.com/lzlrd/wsl-hello-sudo
 
 ## How to Use This Guide
 
-Execute each step via Bash tool. Only ask the user for manual intervention when:
+Execute each step yourself via shell. Only ask the user for manual intervention when:
 - A prompt requires interactive input (installer dialogs, Windows Hello enrollment)
 - A WSL restart is needed
 - A step fails unexpectedly
@@ -28,7 +27,7 @@ sudo apt update && sudo apt install -y gcc make libpam0g-dev git libssl-dev pkg-
 
 ## Step 2 — Install Rust
 
-Ask the user to run this (it's interactive):
+This step is interactive — ask the user to run it themselves:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -36,7 +35,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 They should choose option `1` (default install).
 
-> **After Rust installs, WSL must be restarted.** Tell the user to run `wsl --shutdown` from Windows Terminal, then reopen WSL and come back. The conversation will be lost — that's expected. Tell them to say "continue the wsl-hello-sudo install" and read this file again.
+> **After Rust installs, WSL must be restarted.** Ask the user to run `wsl --shutdown` from Windows Terminal, then reopen WSL and come back. The conversation will be lost — that's expected. Ask them to say "continue the wsl-hello-sudo install" so you can read this file again and resume.
 
 ---
 
@@ -140,13 +139,13 @@ Verify both `pam_wsl_hello.so` and `WindowsHelloBridge.exe` are present before c
 
 ## Step 10 — Run the installer (interactive — user must do this)
 
-Tell the user to run:
+This step is interactive — ask the user to run it themselves:
 
 ```bash
 cd ~/src/wsl-hello-sudo && ./install.sh
 ```
 
-Guide them through the prompts:
+Guide the user through the prompts:
 
 | Prompt | Response |
 |--------|----------|
@@ -159,7 +158,7 @@ Guide them through the prompts:
 
 ## Step 11 — Verify
 
-Tell the user to open a **new** WSL terminal (existing sessions have cached sudo) and run:
+Ask the user to open a **new** WSL terminal (existing sessions have cached sudo) and run:
 
 ```bash
 sudo whoami
@@ -167,7 +166,7 @@ sudo whoami
 
 Expected: Windows Hello prompt appears → user authenticates → `root` returned.
 
-Also verify from the agent's side by running `sudo whoami` via shell — the user should see the Windows Hello prompt on their desktop.
+Also verify yourself by running `sudo whoami` via shell — the user should see the Windows Hello prompt on their desktop.
 
 ---
 
@@ -181,7 +180,7 @@ Run these steps when the user wants to update. Do not skip the security audit �
 cd ~/src/wsl-hello-sudo && git fetch && git log HEAD..origin/master --oneline
 ```
 
-If there are no new commits, tell the user they are already up to date and stop.
+If there are no new commits, let the user know they are already up to date and stop.
 
 ### 2. Check what changed
 
