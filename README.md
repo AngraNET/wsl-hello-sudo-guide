@@ -16,18 +16,18 @@ They talk to each other over a temp file + stdout — no network, no sockets.
 
 ## About the guide
 
-`how_to_enable_and_upgrade.md` is written to be followed by **Claude** (AI assistant), not manually by the user. Hand it to Claude and say "read this and guide me through the installation." Claude will:
+`wsl-hello-sudo-agent-install-guide.md` is written to be followed by an **AI coding agent** (Claude, Copilot, Cursor, or any agent with shell access), not manually by the user. Hand it to your agent and say "read this and guide me through the installation." The agent will:
 
-1. Run all commands autonomously via its Bash tool
+1. Run all commands autonomously via its shell tool
 2. Only ask for your input at interactive steps (Rust installer, Windows Hello enrollment, installer prompts)
-3. **Perform a full security audit of the entire source tree** before building — reading every source file, shell script, and Cargo manifest to check for network calls, shell injection, unexpected file writes, or credential exfiltration. Claude will not proceed if anything suspicious is found.
+3. **Perform a full security audit of the entire source tree** before building — reading every source file, shell script, and Cargo manifest to check for network calls, shell injection, unexpected file writes, or credential exfiltration. The agent will not proceed if anything suspicious is found.
 4. On upgrades, diff what changed, re-audit only the changed files, and rebuild only what's necessary
 
 The security audit is re-run on every install and every update — not skipped because "it was clean last time."
 
 ## What's in this repo
 
-- `how_to_enable_and_upgrade.md` — Full guide covering:
+- `wsl-hello-sudo-agent-install-guide.md` — Full guide covering:
   - Building the PAM module and Windows companion exe from source
   - Security audit checklist (run after every clone or update)
   - Installation walkthrough with interactive prompt answers
