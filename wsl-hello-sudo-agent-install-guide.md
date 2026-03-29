@@ -330,7 +330,73 @@ The installer will ask to overwrite existing files — answer `y` to all.
 | `cargo: command not found` after WSL restart | 🤖 Run `source ~/.cargo/env` |
 | `.exe` not found at expected path after build | 🤖 Check `target/x86_64-pc-windows-gnu/release/` — binary is `WindowsHelloBridge.exe` (not `win_hello_bridge.exe`) |
 | Windows Hello prompt doesn't appear | 🤖 Check Windows interop is enabled: `[interop] enabled=true` in `/etc/wsl.conf` |
-| Locked out of sudo | 👤 From **Windows Terminal** run `wsl -u root` — this bypasses PAM entirely. Then restore `/etc/pam.d/sudo` or run `pam-auth-update --remove wsl-hello`. Root password set in Step 4 can also be used here. A root shell kept open in the same session is **not** sufficient — it disappears on WSL restart. |
+| Locked out of sudo | 👤 See **Sudo Lockout Recovery** section below |
+
+---
+
+## Sudo Lockout Recovery
+👤 **User** + 🤖 **Agent** — guide the user through each step.
+
+> A root shell kept open in the same session is **not** sufficient — it disappears on WSL restart. Follow these steps instead.
+
+### 1. Enter WSL as root (bypasses PAM entirely)
+👤 **User**
+
+Ask the user to open **Windows Terminal** (not WSL) and run:
+
+```
+wsl -u root
+```
+
+They should get a root shell immediately without any password or Hello prompt. This works regardless of how broken PAM is.
+
+If this fails, ask them to try:
+
+```
+wsl --distribution <distro-name> -u root
+```
+
+To find their distro name: `wsl --list` from Windows Terminal.
+
+### 2. Disable the wsl-hello PAM module
+🤖 **Agent** (once the user is in the root shell, run this via your shell tool)
+
+```bash
+pam-auth-update --remove wsl-hello
+```
+
+This cleanly removes the wsl-hello entry from all PAM configs. Test immediately:
+
+```bash
+sudo whoami
+```
+
+If sudo works again (prompting for password), the issue is resolved. Stop here.
+
+### 3. If pam-auth-update is not available — manually restore /etc/pam.d/sudo
+🤖 **Agent**
+
+Check what the file currently looks like:
+
+```bash
+cat /etc/pam.d/sudo
+```
+
+Remove the `pam_wsl_hello.so` line if present:
+
+```bash
+sed -i '/pam_wsl_hello/d' /etc/pam.d/sudo
+```
+
+Then verify sudo works:
+
+```bash
+sudo whoami
+```
+
+### 4. Reinstall cleanly once recovered
+
+Once sudo works again, go back to Step 12 and re-run `./install.sh` to reinstall properly.
 
 ---
 
