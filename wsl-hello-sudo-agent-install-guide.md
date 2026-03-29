@@ -100,8 +100,13 @@ cd ~/src/wsl-hello-sudo && git log --oneline -20
 | Shell injection | Any `Command::new("sh")`, `cmd /c`, string interpolation into shell args |
 | File writes outside expected paths | Writes outside `/etc/pam_wsl_hello/`, `/lib/security/`, Windows install dir |
 | Credential exfiltration | Anything reading `/etc/pam_wsl_hello/` keys and sending them anywhere |
-| New dependencies in Cargo.toml | Unfamiliar crates — check crates.io for legitimacy |
+| New dependencies in Cargo.toml | Unfamiliar crates — check crates.io for legitimacy; look for typosquatting (e.g. `openss1`, `tokio-io` vs `tokio`) |
+| Dependency confusion | New crates that shadow or closely mimic names of legitimate well-known crates |
+| Build scripts (`build.rs`) | Any `build.rs` files — these run arbitrary code at **compile time**, before any binary is produced. Read every one carefully for network calls, file reads, or env harvesting |
+| Environment variable harvesting | `std::env::vars()` or broad `env::var()` calls collecting more than the specific vars the program needs |
 | install.sh changes | Any new curl/wget calls, new files being placed, changed install paths |
+| Symlink attacks in install.sh | Installer copies files without checking if destination paths are symlinks — verify no unexpected symlinks exist at install targets before running |
+| Binary blobs | Any non-source files added to the repo (images, data files) — unlikely to be weaponised here but note any new ones |
 
 ### Expected clean behaviour (baseline from 2026-03-28)
 
