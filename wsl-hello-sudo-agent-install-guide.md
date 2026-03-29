@@ -1,7 +1,7 @@
-# WSL Hello Sudo — Installation Guide (for Claude)
+# WSL Hello Sudo — Agent-Driven Installation Guide
 
-This document guides Claude through installing `wsl-hello-sudo` from source on a new WSL instance.
-The user will ask Claude to read this and walk them through it step by step.
+This document guides an AI coding agent through installing `wsl-hello-sudo` from source on a new WSL instance.
+The user will ask their agent to read this and walk them through it step by step.
 
 Source: https://github.com/lzlrd/wsl-hello-sudo
 
@@ -72,7 +72,7 @@ If the directory already exists (resumed session), skip the clone.
 
 ## Step 6 — Security Audit (run after every clone or pull)
 
-Read and audit the entire repository source before building. Do not rely on a file list — new files may have been added. Use the Glob tool to discover all source files, shell scripts, and Cargo manifests, then read and review every one of them. The repo may have changed since the last install.
+Read and audit the entire repository source before building. Do not rely on a file list — new files may have been added. Discover all source files, shell scripts, and Cargo manifests recursively, then read and review every one of them. The repo may have changed since the last install.
 
 Also run:
 
@@ -167,7 +167,7 @@ sudo whoami
 
 Expected: Windows Hello prompt appears → user authenticates → `root` returned.
 
-Also verify from Claude's side by running `sudo whoami` via Bash tool — the user should see the Windows Hello prompt on their desktop.
+Also verify from the agent's side by running `sudo whoami` via shell — the user should see the Windows Hello prompt on their desktop.
 
 ---
 
