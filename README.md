@@ -14,9 +14,9 @@ The setup has two compiled components:
 
 They talk to each other over a temp file + stdout — no network, no sockets.
 
-## Security Warning — Prompt Injection Risk
+## 🔴 Security Warning — Prompt Injection Risk
 
-> **Only use this guide with source code you trust.** This guide is designed for [lzlrd/wsl-hello-sudo](https://github.com/lzlrd/wsl-hello-sudo), a well-maintained, audited fork of a known project. Do not adapt it to install arbitrary repositories without understanding the risks below.
+> 🔴 **Only use this guide with source code you trust.** This guide is designed for [lzlrd/wsl-hello-sudo](https://github.com/lzlrd/wsl-hello-sudo), a well-maintained, audited fork of a known project. Do not adapt it to install arbitrary repositories without understanding the risks below.
 
 ### The problem with AI-driven code audits
 
@@ -40,7 +40,7 @@ The install guide (`wsl-hello-sudo-agent-install-guide.md`) includes a **Prompt 
 
 This is an unsolved problem in the AI industry. No prompt-based defense is foolproof. A sufficiently sophisticated attack embedded early enough in the agent's context, or one that exploits specific weaknesses in the agent's instruction-following, may still succeed. Current AI agents do not have a verified, tamper-proof audit mode.
 
-**You should treat this guide as raising the bar — not eliminating the risk.**
+🔴 **You should treat this guide as raising the bar — not eliminating the risk.**
 
 ### Precautions you should take
 
