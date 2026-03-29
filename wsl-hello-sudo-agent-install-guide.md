@@ -124,27 +124,31 @@ If anything suspicious is found, **stop and report to the user before proceeding
 
 ## Step 4 — Prepare a sudo lockout recovery path
 
-**Do this before touching PAM.** If the PAM config ends up broken, you need a way back in that survives a WSL restart — a live root terminal in the same session is not enough.
+**This step is for the user — ask them to do both of these before you continue.**
+
+If the PAM config ends up broken, you need a way back in that survives a WSL restart. A root shell kept open in the same session is not enough — it disappears when WSL restarts.
 
 ### 4a — Set a root password
+
+Ask the user to run this in their WSL terminal:
 
 ```bash
 sudo passwd root
 ```
 
-Choose a strong password and store it somewhere safe. This gives you a guaranteed fallback that does not depend on PAM or Windows Hello.
+They should choose a strong password and store it somewhere safe. This gives a guaranteed fallback that does not depend on PAM or Windows Hello.
 
 ### 4b — Confirm `wsl -u root` works
 
-From a **Windows Terminal** (not inside WSL), verify you can enter WSL as root:
+Ask the user to open **Windows Terminal** (not WSL) and run:
 
 ```
 wsl -u root
 ```
 
-This bypasses PAM entirely and works regardless of how broken `/etc/pam.d/sudo` is. If you can get in here, you can always fix the config.
+This bypasses PAM entirely and works regardless of how broken `/etc/pam.d/sudo` is. They should get a root shell immediately. Ask them to type `exit` to return, then confirm back to you that it worked.
 
-> Ask the user to open Windows Terminal now, run `wsl -u root`, confirm they get a root shell, then type `exit` to return. Do not proceed to the installer until this is confirmed.
+**Do not proceed to the next step until the user confirms both 4a and 4b are done.**
 
 ---
 
