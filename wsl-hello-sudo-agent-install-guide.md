@@ -61,11 +61,24 @@ rustup target add x86_64-pc-windows-gnu && sudo apt install -y gcc-mingw-w64-x86
 
 ## Step 5 — Clone the repo
 
+First, check available release tags:
+
 ```bash
-git clone https://github.com/lzlrd/wsl-hello-sudo.git ~/src/wsl-hello-sudo
+git ls-remote --tags https://github.com/lzlrd/wsl-hello-sudo.git
 ```
 
-If the directory already exists (resumed session), skip the clone.
+- If tags exist: show the user the latest tag and ask whether to use it or a specific one. Wait for their answer.
+- If no tags exist: warn the user that there are no release tags and ask whether they want to continue from `master`. Do not proceed until confirmed.
+
+Then clone and checkout the chosen ref:
+
+```bash
+git clone https://github.com/lzlrd/wsl-hello-sudo.git ~/src/wsl-hello-sudo
+cd ~/src/wsl-hello-sudo
+git checkout <tag-or-master>   # use the version the user confirmed
+```
+
+If the directory already exists (resumed session), skip the clone but still confirm which ref is checked out with `git describe --tags` or `git branch`.
 
 ---
 
