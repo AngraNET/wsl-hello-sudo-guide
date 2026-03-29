@@ -14,6 +14,16 @@ The setup has two compiled components:
 
 They talk to each other over a temp file + stdout — no network, no sockets.
 
+## Getting Started
+
+Paste this prompt to your AI agent:
+
+```
+Read https://raw.githubusercontent.com/AngraNET/wsl-hello-sudo-guide/master/wsl-hello-sudo-agent-install-guide.md and follow the steps to install wsl-hello-sudo on my WSL2 machine.
+```
+
+---
+
 ## About the guide
 
 `wsl-hello-sudo-agent-install-guide.md` is written to be followed by an **AI coding agent** (Claude, Copilot, Cursor, or any agent with shell access), not manually by the user. Tested successfully with **Claude Code**. Hand it to your agent and say "read this and guide me through the installation." The agent will:
