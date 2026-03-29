@@ -57,11 +57,6 @@ Paste this prompt to your AI agent:
 
 ```
 Read https://raw.githubusercontent.com/AngraNET/wsl-hello-sudo-guide/master/wsl-hello-sudo-agent-install-guide.md and follow the steps to install wsl-hello-sudo on my WSL2 machine.
-
-Before cloning, check the available tags at https://github.com/lzlrd/wsl-hello-sudo/tags.
-- If a specific release tag is found, ask me if I want to use the latest one or a specific tag, and checkout that tag after cloning.
-- If no tags exist, warn me and ask whether I want to proceed from master before continuing.
-Do not proceed with the installation until the version question is resolved.
 ```
 
 ---

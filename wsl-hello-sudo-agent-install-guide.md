@@ -15,6 +15,10 @@ Execute each step yourself via shell. Only ask the user for manual intervention 
 
 Proceed one step at a time and wait for confirmation before moving to the next.
 
+Before cloning, check available release tags and ask the user which version to install:
+- If tags exist: show the latest and ask whether to use it or a specific one. Wait for their answer.
+- If no tags exist: warn the user and ask whether they want to proceed from `master`. Do not proceed until confirmed.
+
 ---
 
 ## Step 1 — Install Linux build dependencies
