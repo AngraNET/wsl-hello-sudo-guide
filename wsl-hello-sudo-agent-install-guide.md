@@ -1,36 +1,38 @@
 # WSL Hello Sudo — Agent-Driven Installation Guide
 
-This document is for **you**, the AI coding agent. Your job is to install `wsl-hello-sudo` from source on WSL2, guiding the user through it step by step. Run all commands yourself. Only hand over to the user when a step requires interactive input.
+This document is for **you**, the AI coding agent. Your job is to install `wsl-hello-sudo` from source on WSL2, guiding the user through it step by step.
 
-Source: https://github.com/lzlrd/wsl-hello-sudo
+**Legend used throughout this guide:**
+- 🤖 **Agent** — you run this yourself via shell
+- 👤 **User** — you cannot do this; instruct the user and wait for confirmation before continuing
 
 ---
 
 ## How to Use This Guide
 
-Execute each step yourself via shell. Only ask the user for manual intervention when:
-- A prompt requires interactive input (installer dialogs, Windows Hello enrollment)
-- A WSL restart is needed
-- A step fails unexpectedly
-
-Proceed one step at a time and wait for confirmation before moving to the next.
+Execute 🤖 steps yourself via shell. For 👤 steps, give the user clear instructions and do not proceed until they confirm.
 
 **Follow this order strictly: clone and audit the source BEFORE installing any build dependencies.** There is no point setting up a build environment for code that fails the security audit.
+
+Before cloning, check available release tags and ask the user which version to install:
+- If tags exist: show the latest and ask whether to use it or a specific one. Wait for their answer.
+- If no tags exist: warn the user and ask whether they want to proceed from `master`. Do not proceed until confirmed.
 
 ---
 
 ## Step 1 — Check available release tags
+🤖 **Agent**
 
 ```bash
 git ls-remote --tags https://github.com/lzlrd/wsl-hello-sudo.git
 ```
 
-- If tags exist: show the user the latest tag and ask whether to use it or a specific one. Wait for their answer.
-- If no tags exist: warn the user that there are no release tags and ask whether they want to continue from `master`. Do not proceed until confirmed.
+Show the result to the user and ask which version to use before continuing.
 
 ---
 
 ## Step 2 — Clone the repo
+🤖 **Agent**
 
 ```bash
 git clone https://github.com/lzlrd/wsl-hello-sudo.git ~/src/wsl-hello-sudo
@@ -47,6 +49,7 @@ cd ~/src/wsl-hello-sudo && git describe --tags 2>/dev/null || git branch --show-
 ---
 
 ## Step 3 — Security Audit
+🤖 **Agent**
 
 **Run this before installing anything. If the audit fails, stop and do not proceed.**
 
@@ -123,10 +126,9 @@ If anything suspicious is found, **stop and report to the user before proceeding
 ---
 
 ## Step 4 — Prepare a sudo lockout recovery path
+👤 **User** — instruct the user to do both of these; do not proceed until they confirm both are done.
 
-**This step is for the user — ask them to do both of these before you continue.**
-
-If the PAM config ends up broken, you need a way back in that survives a WSL restart. A root shell kept open in the same session is not enough — it disappears when WSL restarts.
+If the PAM config ends up broken, the user needs a way back in that survives a WSL restart. A root shell kept open in the same session is not enough — it disappears when WSL restarts.
 
 ### 4a — Set a root password
 
@@ -148,11 +150,12 @@ wsl -u root
 
 This bypasses PAM entirely and works regardless of how broken `/etc/pam.d/sudo` is. They should get a root shell immediately. Ask them to type `exit` to return, then confirm back to you that it worked.
 
-**Do not proceed to the next step until the user confirms both 4a and 4b are done.**
+**Do not proceed until the user confirms both 4a and 4b are done.**
 
 ---
 
 ## Step 5 — Install Linux build dependencies
+🤖 **Agent**
 
 ```bash
 sudo apt update && sudo apt install -y gcc make libpam0g-dev git libssl-dev pkg-config
@@ -160,9 +163,10 @@ sudo apt update && sudo apt install -y gcc make libpam0g-dev git libssl-dev pkg-
 
 ---
 
-## Step 5 — Install Rust
+## Step 6 — Install Rust
+👤 **User** — this installer is interactive and must be run by the user.
 
-This step is interactive — ask the user to run it themselves:
+Ask the user to run:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -174,9 +178,10 @@ They should choose option `1` (default install).
 
 ---
 
-## Step 6 — Resume after WSL restart
+## Step 7 — Resume after WSL restart
+🤖 **Agent**
 
-When the user returns after restart, check if cargo is available:
+Check if cargo is available:
 
 ```bash
 source ~/.cargo/env && cargo --version
@@ -186,7 +191,8 @@ If not found, check `~/.cargo/bin/cargo` exists and source manually.
 
 ---
 
-## Step 7 — Add Windows cross-compile target
+## Step 8 — Add Windows cross-compile target
+🤖 **Agent**
 
 ```bash
 rustup target add x86_64-pc-windows-gnu && sudo apt install -y gcc-mingw-w64-x86-64
@@ -194,7 +200,8 @@ rustup target add x86_64-pc-windows-gnu && sudo apt install -y gcc-mingw-w64-x86
 
 ---
 
-## Step 8 — Build the PAM module (Linux side)
+## Step 9 — Build the PAM module (Linux side)
+🤖 **Agent**
 
 ```bash
 cd ~/src/wsl-hello-sudo && OPENSSL_NO_VENDOR=1 cargo build --release -p wsl_hello_pam
@@ -204,7 +211,8 @@ cd ~/src/wsl-hello-sudo && OPENSSL_NO_VENDOR=1 cargo build --release -p wsl_hell
 
 ---
 
-## Step 9 — Build the Windows companion exe (cross-compiled from WSL)
+## Step 10 — Build the Windows companion exe (cross-compiled from WSL)
+🤖 **Agent**
 
 ```bash
 cargo build -p win_hello_bridge --release --target x86_64-pc-windows-gnu
@@ -212,7 +220,8 @@ cargo build -p win_hello_bridge --release --target x86_64-pc-windows-gnu
 
 ---
 
-## Step 10 — Copy artifacts to build/
+## Step 11 — Copy artifacts to build/
+🤖 **Agent**
 
 ```bash
 mkdir -p ~/src/wsl-hello-sudo/build
@@ -225,9 +234,10 @@ Verify both `pam_wsl_hello.so` and `WindowsHelloBridge.exe` are present before c
 
 ---
 
-## Step 11 — Run the installer (interactive — user must do this)
+## Step 12 — Run the installer
+👤 **User** — the installer is interactive and must be run by the user.
 
-This step is interactive — ask the user to run it themselves:
+Ask the user to run:
 
 ```bash
 cd ~/src/wsl-hello-sudo && ./install.sh
@@ -244,7 +254,8 @@ Guide the user through the prompts:
 
 ---
 
-## Step 12 — Verify
+## Step 13 — Verify
+🤖 **Agent** + 👤 **User**
 
 Ask the user to open a **new** WSL terminal (existing sessions have cached sudo) and run:
 
@@ -254,15 +265,20 @@ sudo whoami
 
 Expected: Windows Hello prompt appears → user authenticates → `root` returned.
 
-Also verify yourself by running `sudo whoami` via shell — the user should see the Windows Hello prompt on their desktop.
+Also run yourself via shell to confirm from your side:
+
+```bash
+sudo whoami
+```
+
+The user should see the Windows Hello prompt on their desktop when you run this.
 
 ---
 
 ## Updating to a New Version
 
-Run these steps when the user wants to update. Do not skip the security audit — the code may have changed.
-
 ### 1. Fetch latest changes
+🤖 **Agent**
 
 ```bash
 cd ~/src/wsl-hello-sudo && git fetch && git log HEAD..origin/master --oneline
@@ -271,6 +287,7 @@ cd ~/src/wsl-hello-sudo && git fetch && git log HEAD..origin/master --oneline
 If there are no new commits, let the user know they are already up to date and stop.
 
 ### 2. Check what changed
+🤖 **Agent**
 
 ```bash
 git diff HEAD origin/master -- wsl_hello_pam/src/ win_hello_bridge/src/ install.sh Cargo.toml
@@ -279,6 +296,7 @@ git diff HEAD origin/master -- wsl_hello_pam/src/ win_hello_bridge/src/ install.
 Read the diff carefully. Re-run the full security audit from **Step 3** on any changed files.
 
 ### 3. Pull
+🤖 **Agent**
 
 ```bash
 git pull
@@ -288,14 +306,15 @@ git pull
 
 | Changed files | What to rebuild |
 |---------------|----------------|
-| `wsl_hello_pam/src/*` | PAM module only (Steps 8 + 10) |
-| `win_hello_bridge/src/*` | Windows exe only (Steps 9 + 10) |
+| `wsl_hello_pam/src/*` | PAM module only (Steps 9 + 11) |
+| `win_hello_bridge/src/*` | Windows exe only (Steps 10 + 11) |
 | Both | Both |
-| Only `install.sh` or `pam-config` | No rebuild needed, re-run installer (Step 11) |
+| Only `install.sh` or `pam-config` | No rebuild needed, re-run installer (Step 12) |
 
-### 5. Rebuild changed components, then reinstall
+### 5. Rebuild and reinstall
+🤖 **Agent** + 👤 **User** (installer step)
 
-Run only the relevant build steps, then re-run `./install.sh`.
+Run only the relevant build steps, then re-run `./install.sh` (Step 12).
 
 The installer will ask to overwrite existing files — answer `y` to all.
 
@@ -307,11 +326,11 @@ The installer will ask to overwrite existing files — answer `y` to all.
 
 | Problem | Fix |
 |---------|-----|
-| `Error building OpenSSL: make exit status 2` | Use `OPENSSL_NO_VENDOR=1` prefix |
-| `cargo: command not found` after WSL restart | Run `source ~/.cargo/env` |
-| `.exe` not found at expected path after build | Check `target/x86_64-pc-windows-gnu/release/` — binary is `WindowsHelloBridge.exe` (not `win_hello_bridge.exe`) |
-| Windows Hello prompt doesn't appear | Check Windows interop is enabled: `[interop] enabled=true` in `/etc/wsl.conf` |
-| Locked out of sudo | From Windows Terminal run `wsl -u root` — this bypasses PAM entirely. Then restore `/etc/pam.d/sudo` or run `sudo pam-auth-update --remove wsl-hello`. If you set a root password in Step 4, you can also use it here. A root shell kept open in the same session is **not** sufficient — it disappears on WSL restart. |
+| `Error building OpenSSL: make exit status 2` | 🤖 Use `OPENSSL_NO_VENDOR=1` prefix |
+| `cargo: command not found` after WSL restart | 🤖 Run `source ~/.cargo/env` |
+| `.exe` not found at expected path after build | 🤖 Check `target/x86_64-pc-windows-gnu/release/` — binary is `WindowsHelloBridge.exe` (not `win_hello_bridge.exe`) |
+| Windows Hello prompt doesn't appear | 🤖 Check Windows interop is enabled: `[interop] enabled=true` in `/etc/wsl.conf` |
+| Locked out of sudo | 👤 From **Windows Terminal** run `wsl -u root` — this bypasses PAM entirely. Then restore `/etc/pam.d/sudo` or run `pam-auth-update --remove wsl-hello`. Root password set in Step 4 can also be used here. A root shell kept open in the same session is **not** sufficient — it disappears on WSL restart. |
 
 ---
 
@@ -331,6 +350,7 @@ Always use `sufficient` for the PAM module line, never `required`. With `suffici
 | Public key | `/etc/pam_wsl_hello/public_keys/pam_wsl_hello_<linuxuser>.pem` |
 
 ## Uninstall
+👤 **User**
 
 ```bash
 cd ~/src/wsl-hello-sudo && ./uninstall.sh
