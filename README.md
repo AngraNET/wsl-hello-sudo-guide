@@ -14,27 +14,6 @@ The setup has two compiled components:
 
 They talk to each other over a temp file + stdout — no network, no sockets.
 
-## Getting Started
-
-Paste this prompt to your AI agent:
-
-```
-Read https://raw.githubusercontent.com/AngraNET/wsl-hello-sudo-guide/master/wsl-hello-sudo-agent-install-guide.md and follow the steps to install wsl-hello-sudo on my WSL2 machine.
-```
-
----
-
-## About the guide
-
-`wsl-hello-sudo-agent-install-guide.md` is written to be followed by an **AI coding agent** (Claude, Copilot, Cursor, or any agent with shell access), not manually by the user. Tested successfully with **Claude Code**. Hand it to your agent and say "read this and guide me through the installation." The agent will:
-
-1. Run all commands autonomously via its shell tool
-2. Only ask for your input at interactive steps (Rust installer, Windows Hello enrollment, installer prompts)
-3. **Perform a full security audit of the entire source tree** before building — reading every source file, shell script, and Cargo manifest to check for network calls, shell injection, unexpected file writes, or credential exfiltration. The agent will not proceed if anything suspicious is found.
-4. On upgrades, diff what changed, re-audit only the changed files, and rebuild only what's necessary
-
-The security audit is re-run on every install and every update — not skipped because "it was clean last time."
-
 ## Security Warning — Prompt Injection Risk
 
 > **Only use this guide with source code you trust.** This guide is designed for [lzlrd/wsl-hello-sudo](https://github.com/lzlrd/wsl-hello-sudo), a well-maintained, audited fork of a known project. Do not adapt it to install arbitrary repositories without understanding the risks below.
@@ -69,6 +48,29 @@ This is an unsolved problem in the AI industry. No prompt-based defense is foolp
 - Prefer installing from a specific tagged release commit rather than `master`
 - If the agent reports anything unexpected during the audit, take it seriously — don't override it
 - Keep an eye on what the agent actually runs, especially during the install step
+
+---
+
+## Getting Started
+
+Paste this prompt to your AI agent:
+
+```
+Read https://raw.githubusercontent.com/AngraNET/wsl-hello-sudo-guide/master/wsl-hello-sudo-agent-install-guide.md and follow the steps to install wsl-hello-sudo on my WSL2 machine.
+```
+
+---
+
+## About the guide
+
+`wsl-hello-sudo-agent-install-guide.md` is written to be followed by an **AI coding agent** (Claude, Copilot, Cursor, or any agent with shell access), not manually by the user. Tested successfully with **Claude Code**. Hand it to your agent and say "read this and guide me through the installation." The agent will:
+
+1. Run all commands autonomously via its shell tool
+2. Only ask for your input at interactive steps (Rust installer, Windows Hello enrollment, installer prompts)
+3. **Perform a full security audit of the entire source tree** before building — reading every source file, shell script, and Cargo manifest to check for network calls, shell injection, unexpected file writes, or credential exfiltration. The agent will not proceed if anything suspicious is found.
+4. On upgrades, diff what changed, re-audit only the changed files, and rebuild only what's necessary
+
+The security audit is re-run on every install and every update — not skipped because "it was clean last time."
 
 ## What's in this repo
 
